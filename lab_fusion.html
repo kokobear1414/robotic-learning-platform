@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interactive Sensor Fusion Simulator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">RoboArm Academy</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+        </ul>
+    </nav>
+
+    <h1>Interactive Sensor Fusion Simulator</h1>
+
+    <div id="canvas-target"></div>
+
+    <div class="controls-panel">
+        <div class="slider-group">
+            <label>GPS Noise Level:</label>
+            <input type="range" id="noiseSlider" min="1" max="100" value="30">
+        </div>
+        <p>
+            <b>Instructions:</b> Click the canvas to focus, then use <b>Arrow Keys</b> to move the robot.<br>
+            🔴 Red Dot = Noisy Sensor | 🟢 Green Dot = Filtered Estimate | ⬛ Dark Box = True Robot
+        </p>
+    </div>
+
+<script>
+// ====================== SIMULATOR VARIABLES ======================
+const canvasWidth = 600;
+const canvasHeight = 400;
+let trueX = canvasWidth/2, trueY = canvasHeight/2;
+let vel = 0, angle = 0;
+let estX = canvasWidth/2, estY = canvasHeight/2;
+let errorX = 1, errorY = 1;
+let gpsX = 0, gpsY = 0;
+let processNoise = 0.5;
+
+// ====================== P5.JS SETUP ======================
+function setup() {
+    let cnv = createCanvas(canvasWidth, canvasHeight);
+    cnv.parent('canvas-target');
+    frameRate(60);
+}
+
+function draw() {
+    // --- UPDATED COLORS FOR LIGHT THEME ---
+    background(248, 250, 252); // Light background (matches CSS var --light)
+    drawGrid();
+
+    // --- ROBOT MOVEMENT WITH BOUNDS ---
+    if (keyIsDown(UP_ARROW)) vel += 0.12;
+    if (keyIsDown(DOWN_ARROW)) vel -= 0.12;
+    if (keyIsDown(LEFT_ARROW)) angle -= 0.05;
+    if (keyIsDown(RIGHT_ARROW)) angle += 0.05;
+    vel *= 0.95;
+
+    trueX += Math.cos(angle) * vel;
+    trueY += Math.sin(angle) * vel;
+
+    // Clamp robot inside canvas
+    trueX = constrain(trueX, 20, canvasWidth - 20);
+    trueY = constrain(trueY, 20, canvasHeight - 20);
+
+    // --- SIMULATE NOISY GPS ---
+    let noiseLevel = document.getElementById('noiseSlider').value;
+    gpsX = trueX + randomGaussian(0, parseFloat(noiseLevel));
+    gpsY = trueY + randomGaussian(0, parseFloat(noiseLevel));
+
+    gpsX = constrain(gpsX, 0, canvasWidth);
+    gpsY = constrain(gpsY, 0, canvasHeight);
+
+    // --- KALMAN FILTER ---
+    runKalmanFilterX(noiseLevel);
+    runKalmanFilterY(noiseLevel);
+
+    // --- DRAW ROBOT ---
+    push();
+    translate(trueX, trueY);
+    rotate(angle);
+    fill(51, 65, 85); // Dark Slate Robot Body
+    rectMode(CENTER);
+    rect(0, 0, 40, 20);
+    fill(200); // Light Head
+    rect(15, 0, 5, 20);
+    pop();
+
+    // GPS reading - Red Dot
+    fill(239, 68, 68, 180); // Red
+    noStroke();
+    ellipse(gpsX, gpsY, 12, 12);
+    stroke(239, 68, 68, 80);
+    line(gpsX, gpsY, estX, estY);
+
+    // Kalman Estimate - Green Dot
+    fill(34, 197, 94); // Green
+    noStroke();
+    ellipse(estX, estY, 18, 18);
+    fill(34, 197, 94, 50);
+    stroke(21, 128, 61, 120);
+    ellipse(estX, estY, 20 + errorX*5, 20 + errorY*5);
+
+    // Legend
+    noStroke();
+    fill(51, 65, 85); // Dark Text
+    text("Dark Box = True Robot", 10, 20);
+    text("Red Dot = Noisy GPS", 10, 40);
+    text("Green Dot = Filtered Estimate", 10, 60);
+}
+
+// ====================== KALMAN FILTER ======================
+function runKalmanFilterX(measurementNoise) {
+    let speedX = Math.cos(angle) * vel;
+    estX += speedX;
+    errorX += processNoise;
+    let K = errorX / (errorX + parseFloat(measurementNoise));
+    estX += K * (gpsX - estX);
+    errorX *= (1 - K);
+    estX = constrain(estX, 0, canvasWidth);
+}
+function runKalmanFilterY(measurementNoise) {
+    let speedY = Math.sin(angle) * vel;
+    estY += speedY;
+    errorY += processNoise;
+    let K = errorY / (errorY + parseFloat(measurementNoise));
+    estY += K + (gpsY - estY) * K;
+    errorY *= (1 - K);
+    estY = constrain(estY, 0, canvasHeight);
+}
+
+// ====================== GRID ======================
+function drawGrid() {
+    stroke(203, 213, 225); // Light Grey Lines
+    strokeWeight(1);
+    for(let i=0; i<width; i+=40) line(i,0,i,height);
+    for(let i=0; i<height; i+=40) line(0,i,width,i);
+}
+</script>
+</body>
+</html>

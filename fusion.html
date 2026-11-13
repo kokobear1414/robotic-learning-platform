@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sensor Fusion Learning Platform</title>
+
+<!-- MathJax -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ===================== GLOBAL ===================== */
+:root {
+    --accent: #3b82f6;
+    --accent2: #22d3ee;
+    --dark: #0f172a;
+    --card: rgba(255,255,255,0.9);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at top, #1e293b, #020617);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* ===================== HERO ===================== */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    max-width: 700px;
+    margin: 20px auto 40px;
+    font-size: 1.2rem;
+    color: #cbd5f5;
+}
+
+.hero button {
+    padding: 16px 38px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: black;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 40px rgba(59,130,246,0.6);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.hero button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 0 60px rgba(34,211,238,0.8);
+}
+
+/* ===================== SECTIONS ===================== */
+.section {
+    max-width: 1000px;
+    margin: auto;
+    padding: 80px 30px;
+}
+
+.card {
+    background: var(--card);
+    color: #111;
+    border-radius: 18px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+}
+
+.card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card h2 {
+    color: #2563eb;
+    margin-bottom: 15px;
+}
+
+.card p, .card li {
+    line-height: 1.9;
+    font-size: 1.05rem;
+}
+
+/* ===================== INFO BOX ===================== */
+.highlight {
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    border-left: 6px solid #0284c7;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+/* ===================== CTA ===================== */
+.cta {
+    background: linear-gradient(135deg, #2563eb, #22d3ee);
+    padding: 60px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 0 80px rgba(34,211,238,0.6);
+}
+
+.cta a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 16px 40px;
+    background: white;
+    color: #0f172a;
+    border-radius: 999px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.3s;
+}
+
+.cta a:hover {
+    transform: scale(1.08);
+}
+
+/* ===================== VIDEO ===================== */
+.video {
+    max-width: 900px;
+    margin: 100px auto;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.8);
+}
+
+.video iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+}
+
+/* ===================== FLOATING DOTS ===================== */
+.dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: cyan;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.6;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+    <div>
+        <h1>Sensor Fusion in Robotics</h1>
+        <p>
+            Experience how robots combine noisy sensors into accurate decisions
+            using intelligent fusion techniques like the Kalman Filter.
+        </p>
+        <button onclick="scrollToContent()">Start Learning</button>
+    </div>
+</section>
+
+<!-- CONTENT -->
+<section class="section" id="content">
+
+    <div class="card">
+        <h2>Introduction</h2>
+        <p>
+            Robots must perceive and interact with complex environments using sensors
+            that are often noisy or unreliable. Sensor fusion enables robots to combine
+            information from multiple sources to produce accurate and stable estimates.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>What Is Sensor Fusion?</h2>
+        <p>
+            Sensor fusion is the process of integrating data from multiple sensors
+            to obtain a better understanding of a system than any individual sensor
+            can provide on its own.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>How Sensor Fusion Works</h2>
+        <ul>
+            <li><strong>Prediction:</strong> Estimates from motion or physics models</li>
+            <li><strong>Measurement:</strong> Real sensor data affected by noise</li>
+        </ul>
+
+        <div class="highlight">
+            In this module, a Kalman Filter is used to optimally balance prediction
+            and measurement based on uncertainty.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Understanding the Simulation</h2>
+        <p>
+            The simulation demonstrates how sensor fusion improves position estimation
+            under noisy conditions.
+        </p>
+        <ul>
+            <li><strong>Red dot:</strong> Raw sensor measurement</li>
+            <li><strong>Green dot:</strong> Fused estimate</li>
+            <li><strong>Vehicle:</strong> True position</li>
+        </ul>
+    </div>
+
+    <div class="card cta">
+        <h2>Try It Yourself</h2>
+        <p>Launch the interactive sensor fusion simulator</p>
+        <a href="lab_fusion.html">Launch Simulator</a>
+    </div>
+
+    <div class="card">
+        <h2>Mathematical Model</h2>
+        $$ x_k = x_{k-1} + K(z_k - x_{k-1}) $$
+        <p>
+            The Kalman Gain determines how much the filter trusts the sensor.
+        </p>
+    </div>
+
+</section>
+
+<!-- VIDEO -->
+<div class="video">
+    <iframe
+        width="100%"
+        height="500"
+        src="https://www.youtube.com/embed/j7ZgeCjykwg"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+    </iframe>
+</div>
+
+
+
+<!-- ===================== JS ===================== -->
+<script>
+/* Smooth scroll */
+function scrollToContent() {
+    document.getElementById("content").scrollIntoView({ behavior: "smooth" });
+}
+
+/* Scroll reveal */
+const cards = document.querySelectorAll('.card');
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+        }
+    });
+}, { threshold: 0.2 });
+
+cards.forEach(card => observer.observe(card));
+
+/* Floating particles */
+for (let i = 0; i < 30; i++) {
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    document.body.appendChild(dot);
+
+    let x = Math.random() * window.innerWidth;
+    let y = Math.random() * window.innerHeight;
+    let dx = (Math.random() - 0.5) * 0.5;
+    let dy = (Math.random() - 0.5) * 0.5;
+
+    setInterval(() => {
+        x += dx;
+        y += dy;
+        if (x < 0 || x > window.innerWidth) dx *= -1;
+        if (y < 0 || y > window.innerHeight) dy *= -1;
+        dot.style.transform = `translate(${x}px, ${y}px)`;
+    }, 30);
+}
+</script>
+
+</body>
+</html>
